@@ -1,243 +1,1 @@
-# coding: utf-8
-
-# *Python Machine Learning 2nd Edition* by [Sebastian Raschka](https://sebastianraschka.com), Packt Publishing Ltd. 2017
-# 
-# Code Repository: https://github.com/rasbt/python-machine-learning-book-2nd-edition
-# 
-# Code License: [MIT License](https://github.com/rasbt/python-machine-learning-book-2nd-edition/blob/master/LICENSE.txt)
-
-# # Python Machine Learning - Code Examples
-
-# # Chapter 11 - Working with Unlabeled Data – Clustering Analysis
-
-# Note that the optional watermark extension is a small IPython notebook plugin that I developed to make the code reproducible. You can just skip the following line(s).
-
-# In[1]:
-
-
-
-
-# *The use of `watermark` is optional. You can install this IPython extension via "`pip install watermark`". For more information, please see: https://github.com/rasbt/watermark.*
-
-
-# ### Overview
-
-# - [Grouping objects by similarity using k-means](#Grouping-objects-by-similarity-using-k-means)
-#   - [K-means clustering using scikit-learn](#K-means-clustering-using-scikit-learn)
-#   - [A smarter way of placing the initial cluster centroids using k-means++](#A-smarter-way-of-placing-the-initial-cluster-centroids-using-k-means++)
-#   - [Hard versus soft clustering](#Hard-versus-soft-clustering)
-#   - [Using the elbow method to find the optimal number of clusters](#Using-the-elbow-method-to-find-the-optimal-number-of-clusters)
-#   - [Quantifying the quality of clustering via silhouette plots](#Quantifying-the-quality-of-clustering-via-silhouette-plots)
-# - [Organizing clusters as a hierarchical tree](#Organizing-clusters-as-a-hierarchical-tree)
-#   - [Grouping clusters in bottom-up fashion](#Grouping-clusters-in-bottom-up-fashion)
-#   - [Performing hierarchical clustering on a distance matrix](#Performing-hierarchical-clustering-on-a-distance-matrix)
-#   - [Attaching dendrograms to a heat map](#Attaching-dendrograms-to-a-heat-map)
-#   - [Applying agglomerative clustering via scikit-learn](#Applying-agglomerative-clustering-via-scikit-learn)
-# - [Locating regions of high density via DBSCAN](#Locating-regions-of-high-density-via-DBSCAN)
-# - [Summary](#Summary)
-
-
-# In[2]:
-import numpy as np
-from IPython.display import Image
-
-# # Grouping objects by similarity using k-means
-
-# ## K-means clustering using scikit-learn
-
-# In[3]:
-
-
-from sklearn.datasets import make_blobs
-'''
-X, y = make_blobs(n_samples=50, 
-                  n_features=2, 
-                  centers=3, 
-                  cluster_std=0.5, 
-                  shuffle=True, 
-                  random_state=0)
-'''
-
-#early systolic
-X1_0 = np.random.normal(loc = 204,scale = 35, size = 50) #duration
-X1_1 = np.random.normal(loc = 388,scale = 8.5, size = 50) #pitch
-
-y1 = [0] * 50
-
-#mid systolic
-X2_0 = np.random.normal(loc = 62,scale = 50, size = 50) #duration
-X2_1 = np.random.normal(loc = 130,scale = 32, size = 50) #pitch
-
-y2 = [1] * 50
-
-X = np.zeros((100,2))
-X_0 = np.append(X1_0, X2_0)
-X_1 = np.append(X1_1, X2_1)
-
-X[:, 0] = X_0
-X[:, 1] = X_1
-
-y = np.append(y1,y2)
-print(X)
-print(y)
-
-#print(X1)
-#print(y)
-
-
-# In[4]:
-
-
-import matplotlib.pyplot as plt
-
-plt.scatter(X[:, 0], X[:, 1], 
-            c='white', marker='o', edgecolor='black', s=50)
-
-plt.xlabel('Duration')
-plt.ylabel('Pitch')
-
-plt.grid()
-plt.tight_layout()
-#plt.savefig('images/11_01.png', dpi=300)
-plt.show()
-
-
-# In[5]:
-
-
-from sklearn.cluster import KMeans
-
-km = KMeans(n_clusters=2, 
-            init='random', 
-            n_init=10, 
-            max_iter=300,
-            tol=1e-04,
-            random_state=0)
-
-y_km = km.fit_predict(X)
-
-
-# In[6]:
-
-
-plt.scatter(X[y_km == 0, 0],
-            X[y_km == 0, 1],
-            s=50, c='lightgreen',
-            marker='s', edgecolor='black',
-            label='cluster 1')
-plt.scatter(X[y_km == 1, 0],
-            X[y_km == 1, 1],
-            s=50, c='orange',
-            marker='o', edgecolor='black',
-            label='cluster 2')
-plt.scatter(X[y_km == 2, 0],
-            X[y_km == 2, 1],
-            s=50, c='lightblue',
-            marker='v', edgecolor='black',
-            label='cluster 3')
-plt.scatter(km.cluster_centers_[:, 0],
-            km.cluster_centers_[:, 1],
-            s=250, marker='*',
-            c='red', edgecolor='black',
-            label='centroids')
-plt.legend(scatterpoints=1)
-
-plt.xlabel('Duration')
-plt.ylabel('Pitch')
-
-plt.grid()
-plt.tight_layout()
-#plt.savefig('images/11_02.png', dpi=300)
-plt.show()
-
-
-
-# ## A smarter way of placing the initial cluster centroids using k-means++
-
-# ...
-
-# ## Hard versus soft clustering
-
-# ...
-
-# ## Using the elbow method to find the optimal number of clusters 
-
-# In[7]:
-
-
-print('Distortion: %.2f' % km.inertia_)
-
-
-# In[8]:
-
-
-distortions = []
-for i in range(1, 11):
-    km = KMeans(n_clusters=i, 
-                init='k-means++', 
-                n_init=10, 
-                max_iter=300, 
-                random_state=0)
-    km.fit(X)
-    distortions.append(km.inertia_)
-plt.plot(range(1, 11), distortions, marker='o')
-plt.xlabel('Number of clusters')
-plt.ylabel('Distortion')
-plt.tight_layout()
-#plt.savefig('images/11_03.png', dpi=300)
-plt.show()
-
-
-
-# ## Quantifying the quality of clustering  via silhouette plots
-
-# In[9]:
-
-
-import numpy as np
-from matplotlib import cm
-from sklearn.metrics import silhouette_samples
-
-km = KMeans(n_clusters=2, 
-            init='k-means++', 
-            n_init=10, 
-            max_iter=300,
-            tol=1e-04,
-            random_state=0)
-y_km = km.fit_predict(X)
-
-cluster_labels = np.unique(y_km)
-n_clusters = cluster_labels.shape[0]
-silhouette_vals = silhouette_samples(X, y_km, metric='euclidean')
-y_ax_lower, y_ax_upper = 0, 0
-yticks = []
-for i, c in enumerate(cluster_labels):
-    c_silhouette_vals = silhouette_vals[y_km == c]
-    c_silhouette_vals.sort()
-    y_ax_upper += len(c_silhouette_vals)
-    color = cm.jet(float(i) / n_clusters)
-    plt.barh(range(y_ax_lower, y_ax_upper), c_silhouette_vals, height=1.0, 
-             edgecolor='none', color=color)
-
-    yticks.append((y_ax_lower + y_ax_upper) / 2.)
-    y_ax_lower += len(c_silhouette_vals)
-    
-silhouette_avg = np.mean(silhouette_vals)
-plt.axvline(silhouette_avg, color="red", linestyle="--") 
-
-plt.yticks(yticks, cluster_labels + 1)
-plt.ylabel('Cluster')
-plt.xlabel('Silhouette coefficient')
-
-plt.tight_layout()
-#plt.savefig('images/11_04.png', dpi=300)
-plt.show()
-
-
-
-
-
-
-
-
-
+#Machine Learning Heart Murmur Clustering #Alisa Levin and Skyler Szot # Add user input for amount of features and clusters # Test different features to see which are robust and which are sensitive # Try to do something with his code import numpy as npfrom IPython.display import Imagefrom sklearn.datasets import make_blobsimport matplotlib.pyplot as pltfrom sklearn.cluster import KMeansprint("Enter positive floats: ")std1 = float(input("\nEnter onset time standard deviation modifier: "))std2 = float(input("\nEnter duration standard deviation modifier: "))std3 = float(input("\nEnter heart sound duration standard deviation modifier: "))std4 = float(input("\nEnter pitch standard deviation modifier: "))#early systolicX1_0 = np.random.normal(loc = 0,scale = 0, size = 50) #s=0, d=1X1_1 = np.random.normal(loc = 50,scale = 0 * std1, size = 50) #onset time (ms)X1_2 = np.random.normal(loc = 204,scale = 35 * std2, size = 50) #duration (ms)X1_3 = np.random.normal(loc = 354,scale = 7 * std3, size = 50) #heart sound duration (ms)X1_4 = np.random.normal(loc = 388,scale = 8.5 * std4, size = 50) #pitch (Hz)y1 = [0] * 50#holo systolicX2_0 = np.random.normal(loc = 0,scale = 0, size = 50) #s=0, d=1X2_1 = np.random.normal(loc = 50,scale = 0 * std1, size =  50) #onset time (ms)X2_2 = np.random.normal(loc = 200,scale = 84 * std2, size = 50) #duration (ms)X2_3 = np.random.normal(loc = 326,scale = 36 * std3, size = 50) #heart sound duration (ms)X2_4 = np.random.normal(loc = 331,scale = 76 * std4, size = 50) #pitch (Hz)y2 = [1] * 50#mid systolicX3_0 = np.random.normal(loc = 0,scale = 0, size = 50) #s=0, d=1X3_1 = np.random.normal(loc = 129,scale = 46 * std1, size = 50) #onset time (ms)X3_2 = np.random.normal(loc = 62,scale = 50 * std2, size = 50) #duration (ms)X3_3 = np.random.normal(loc = 360,scale = 28 * std3, size = 50) #heart sound duration (ms)X3_4 = np.random.normal(loc = 131,scale = 32 * std4, size = 50) #pitch (Hz)y3 = [2] * 50#late systolicX4_0 = np.random.normal(loc = 0,scale = 0, size = 50) #s=0, d=1X4_1 = np.random.normal(loc = 183,scale = 28 * std1, size = 50) #onset time (ms)X4_2 = np.random.normal(loc = 60,scale = 38 * std2, size = 50) #duration (ms)X4_3 = np.random.normal(loc = 345,scale = 24 * std3, size = 50) #heart sound duration (ms)X4_4 = np.random.normal(loc = 260,scale = 106 * std4, size = 50) #pitch (Hz)y4 = [3] * 50#early diastolicX5_0 = np.random.normal(loc = 1,scale = 0, size = 50) #s=0, d=1X5_1 = np.random.normal(loc = 50,scale = 0 * std1, size = 50) #onset time (ms)X5_2 = np.random.normal(loc = 386,scale = 5 * std2, size = 50) #duration (ms)X5_3 = np.random.normal(loc = 676,scale = 5 * std3, size = 50) #heart sound duration (ms)X5_4 = np.random.normal(loc = 125,scale = 1 * std4, size = 50) #pitch (Hz)y5 = [4] * 50X = np.zeros((250,6))X_0 = np.append(X1_0, X2_0)X_0 = np.append(X_0, X3_0)X_0 = np.append(X_0, X4_0)X_0 = np.append(X_0, X5_0)X_1 = np.append(X1_1, X2_2)X_1 = np.append(X_1, X3_2)X_1 = np.append(X_1, X4_2)X_1 = np.append(X_1, X5_2)X_2 = np.append(X1_2, X2_2)X_2 = np.append(X_2, X3_2)X_2 = np.append(X_2, X4_2)X_2 = np.append(X_2, X5_2)X_3 = np.append(X1_3, X2_3)X_3 = np.append(X_3, X3_3)X_3 = np.append(X_3, X4_3)X_3 = np.append(X_3, X5_3)X_4 = np.append(X1_4, X2_4)X_4 = np.append(X_4, X3_4)X_4 = np.append(X_4, X4_4)X_4 = np.append(X_4, X5_4)X[:, 0] = X_0X[:, 1] = X_1X[:, 2] = X_2X[:, 3] = X_3X[:, 4] = X_4y = np.append(y1,y2)y = np.append(y,y3)y = np.append(y,y4)y = np.append(y,y5)#randomize dataX[:,5] = ynp.random.shuffle(X[:])y = X[:,5]features = []clusters = int(input("\n\tEnter Number of Clusters to be Created: "))print("\nType 1 for Yes and 0 for No")a = int(input("\n\tInclude Systole/Diastole feature?: "))if (a == 1):	features.append(0)b = int(input("\tInclude Onset Time feature?: "))if (b == 1):	features.append(1)c = int(input("\tInclude Duration feature?: "))if (c == 1):	features.append(2)d = int(input("\tInclude Heart Sound Duration feature?: "))if (d == 1):	features.append(3)e = int(input("\tInclude Pitch feature?: "))if (e == 1):	features.append(3)#k-means clustering with 5 clusters km = KMeans(n_clusters=clusters,             init='random',             n_init=10,             max_iter=300,            tol=1e-04,            random_state=0)y_km = km.fit_predict(X[:,features])#evaluating the accuracy of clustering HM = np.zeros((5,5))for i in range(len(y)):    HM[int(y[i])][km.labels_[i]] += 1print ("\n                   0   1   2   3   4")print("Early Systolic: ", HM[0])print("Holo Systolic:  ", HM[1])print("Mid Systolic:   ",HM[2])print("Late Systolic:  ",HM[3])print("Early Diastolic:",HM[4])
