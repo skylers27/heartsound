@@ -2,7 +2,6 @@
 #kmeans clustering, graphing, elbow method, and silhouette plot
 
 import numpy as np
-from IPython.display import Image
 
 with open("testFun.dat") as textFile:
     y = [line.split() for line in textFile]
