@@ -32,9 +32,9 @@ for i in range(0,len(y)): # num rows
   for j in range(0,len(y[0])): # num columns 
     X[i,j] = float(y[i,j])
    
-xpts = np.zeros(len(y[0])) 
-ypts = np.zeros(len(y[0])) 
-labels = np.zeros(len(y[0])) # no labels 
+xpts = np.zeros(len(y)) 
+ypts = np.zeros(len(y)) 
+labels = np.zeros(len(y)) # no labels 
 
 # which are columns and rows 
 print ("len(y[0])", len(y[0]))
@@ -42,11 +42,11 @@ print ("len(y)", len(y))
 
 
 # xpts = x[all rows][0]
-for i in range (0, len(y[0])):
+for i in range (0, len(y)):
   xpts[i] = X[i][0]
 
 # ypts = x[all rows][1]
-for i in range (0, len(y[0])):
+for i in range (0, len(y)):
   ypts[i] = X[i][1]
 
 print ("LABELS\n")
@@ -62,7 +62,7 @@ ax0.set_title('Test data: 200 points x2 clusters.')
 plt.show()
 
 # Set up the loop and plot
-fig1, axes1 = plt.subplots(3, 3, figsize=(8, 8))
+fig1, axes1 = plt.subplots(2, 1, figsize=(8, 8)) #number of figures
 alldata = np.vstack((xpts, ypts))
 fpcs = []
 
@@ -71,10 +71,12 @@ for ncenters, ax in enumerate(axes1.reshape(-1), 2):
         alldata, ncenters, 2, error=0.005, maxiter=1000, init=None)
     print("Centers = ", str(ncenters), "\n") # u0 is the array of the memberiship functions 
     print ("Data\t\t Cluster 1\t\t Cluster 2\n") 
-    for i in range (len(y[0])): # columns
-      print (xpts[i], ",", ypts[i])
-      for j in range (ncenters): # rows
-        print ("\t\t ", u0[i][j]) 
+    for i in range (len(y)): # columns
+      print ("Data point: ",xpts[i], ",", ypts[i]) #data point
+      print("Membership: ")
+      for j in range(ncenters): #number of clusters
+        print("Cluster: ", j, "\n", u0[j][i]) #membership for cluster
+      print()
 
     # Store fpc values for later
     fpcs.append(fpc)
