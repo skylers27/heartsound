@@ -36,10 +36,6 @@ xpts = np.zeros(len(y))
 ypts = np.zeros(len(y)) 
 labels = np.zeros(len(y)) # no labels 
 
-# which are columns and rows 
-print ("len(y[0])", len(y[0]))
-print ("len(y)", len(y))
-
 
 # xpts = x[all rows][0]
 for i in range (0, len(y)):
@@ -48,10 +44,6 @@ for i in range (0, len(y)):
 # ypts = x[all rows][1]
 for i in range (0, len(y)):
   ypts[i] = X[i][1]
-
-print ("LABELS\n")
-for i in range (len(labels)): # should be way more like in fuzzy.py
-  print (labels[i])
 
 # Visualize the test data
 fig0, ax0 = plt.subplots()
@@ -70,7 +62,6 @@ for ncenters, ax in enumerate(axes1.reshape(-1), 2):
     cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(
         alldata, ncenters, 2, error=0.005, maxiter=1000, init=None)
     print("Centers = ", str(ncenters), "\n") # u0 is the array of the memberiship functions 
-    print ("Data\t\t Cluster 1\t\t Cluster 2\n") 
     for i in range (len(y)): # columns
       print ("Data point: ",xpts[i], ",", ypts[i]) #data point
       print("Membership: ")
