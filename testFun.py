@@ -9,6 +9,7 @@ with open("testFun.dat") as textFile:
 y = np.array(y)
 X = np.zeros(shape=(200,2))
 
+# stores test data as number in array X (converts from strings)
 for i in range(0,len(y)):
 	for j in range(0,len(y[0])):
 		X[i,j] = float(y[i,j])
@@ -20,6 +21,7 @@ for i in range(0,len(y)):
 
 import matplotlib.pyplot as plt
 
+# plots out entire data set 
 plt.scatter(X[:, 0], X[:, 1], 
             c='white', marker='o', edgecolor='black', s=50)
 
@@ -50,7 +52,7 @@ y_km = km.fit_predict(X)
 
 # In[6]:
 
-
+# plot clustered data 
 plt.scatter(X[y_km == 0, 0],
             X[y_km == 0, 1],
             s=50, c='lightgreen',
@@ -101,7 +103,7 @@ print('Distortion: %.2f' % km.inertia_)
 
 # In[8]:
 
-
+# plot elbow method to show ideal number of clusters 
 distortions = []
 for i in range(1, 11):
     km = KMeans(n_clusters=i, 
