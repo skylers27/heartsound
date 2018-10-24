@@ -129,7 +129,7 @@ import numpy as np
 from matplotlib import cm
 from sklearn.metrics import silhouette_samples
 
-km = KMeans(n_clusters=2, 
+km = KMeans(n_clusters=10, 
             init='k-means++', 
             n_init=10, 
             max_iter=300,
