@@ -212,20 +212,25 @@ pts3 = X[:,3]
 pts4 = X[:,4]
 labels = X[:,5]
 
+ncenters = int(input("Enter number of clusters: "))
 
-fig1, axes1 = plt.subplots(3, 3, figsize=(8, 8))
 alldata = np.vstack((pts0, pts1, pts2, pts3, pts4))
 fpcs = []
 
-for ncenters, ax in enumerate(axes1.reshape(-1), 2):
-    cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(
-        alldata, ncenters, 2, error=0.005, maxiter=1000, init=None)
-    print("Centers = ", str(ncenters), "\n") # u0 is the array of the memberiship functions 
-    for i in range (len(y)): # columns
-      print ("Data point: ", i + 1) #data point
-      print("Membership: ")
-      for j in range(ncenters): #number of clusters
-        print("Cluster: ", j, "\n", u0[j][i]) #membership for cluster
-      print()
+
+cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(
+alldata, ncenters, 2, error=0.005, maxiter=1000, init=None)
+print("Centers = ", str(ncenters), "\n") # u0 is the array of the memberiship functions 
+for i in range (len(y)): # columns
+	print ("Data point: ", i+1)
+	print("s/d: %d" % X[i,0])
+	print("onset: %0.2f ms" % X[i,1])
+	print("duration: %0.2f ms" % X[i,2])
+	print("heart sound duration: %0.2f ms" % X[i,3])
+	print("pitch: %0.2f Hz" % X[i,4])
+	print("Membership: ")
+	for j in range(ncenters): #number of clusters
+		print("Cluster: ", j, "\t%0.2f" % u0[j][i]) #membership for cluster
+	print()
 
     
