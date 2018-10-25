@@ -204,22 +204,17 @@ X[:,5] = y
 
 np.random.shuffle(X[:])
 
-# onset time and duration 
-xpts = X[:,1]
-ypts = X[:,2]
+
+pts0 = X[:,0]
+pts1 = X[:,1]
+pts2 = X[:,2]
+pts3 = X[:,3]
+pts4 = X[:,4]
 labels = X[:,5]
 
-# Visualize the test data
-fig0, ax0 = plt.subplots()
-for label in range(5):
-    ax0.plot(xpts[labels == label], ypts[labels == label], '.',
-             color=colors[label])
-ax0.set_title('Test data: 250 points x5 clusters.')
-plt.show()
 
-# Set up the loop and plot
 fig1, axes1 = plt.subplots(3, 3, figsize=(8, 8))
-alldata = np.vstack((xpts, ypts))
+alldata = np.vstack((pts0, pts1, pts2, pts3, pts4))
 fpcs = []
 
 for ncenters, ax in enumerate(axes1.reshape(-1), 2):
@@ -227,27 +222,10 @@ for ncenters, ax in enumerate(axes1.reshape(-1), 2):
         alldata, ncenters, 2, error=0.005, maxiter=1000, init=None)
     print("Centers = ", str(ncenters), "\n") # u0 is the array of the memberiship functions 
     for i in range (len(y)): # columns
-      print ("Data point: ",xpts[i], ",", ypts[i]) #data point
+      print ("Data point: ", i + 1) #data point
       print("Membership: ")
       for j in range(ncenters): #number of clusters
         print("Cluster: ", j, "\n", u0[j][i]) #membership for cluster
       print()
 
-    # Store fpc values for later
-    fpcs.append(fpc)
-
-    # Plot assigned clusters, for each data point in training set
-    cluster_membership = np.argmax(u, axis=0)
-    for j in range(ncenters):
-        ax.plot(xpts[cluster_membership == j],
-                ypts[cluster_membership == j], '.', color=colors[j])
-
-    # Mark the center of each fuzzy cluster
-    for pt in cntr:
-        ax.plot(pt[0], pt[1], 'rs')
-
-    ax.set_title('Centers = {0}; FPC = {1:.2f}'.format(ncenters, fpc))
-    ax.axis('off')
-
-fig1.tight_layout()
-plt.show()
+    
