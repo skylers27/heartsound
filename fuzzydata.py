@@ -213,7 +213,7 @@ pts4 = X[:,4]
 labels = X[:,5]
 
 
-fig1, axes1 = plt.subplots(3, 3, figsize=(8, 8))
+fig1, axes1 = plt.subplots(5, 1, figsize=(8, 8))
 alldata = np.vstack((pts0, pts1, pts2, pts3, pts4))
 fpcs = []
 
