@@ -212,8 +212,9 @@ pts3 = X[:,3]
 pts4 = X[:,4]
 labels = X[:,5]
 
+clust_choice = int(input("Enter number of clusters: "))
 
-fig1, axes1 = plt.subplots(5, 1, figsize=(8, 8))
+fig1, axes1 = plt.subplots(clust_choice, 1, figsize=(8, 8))
 alldata = np.vstack((pts0, pts1, pts2, pts3, pts4))
 fpcs = []
 
