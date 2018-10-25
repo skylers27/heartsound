@@ -1,4 +1,7 @@
-#fuzzy clustering
+#fuzzytest.py
+#Skyler Szot
+#Alisa Levin
+#fuzzy clustering for testFun.dat
 
 from __future__ import division, print_function
 import numpy as np
@@ -6,16 +9,6 @@ import matplotlib.pyplot as plt
 import skfuzzy as fuzz
 
 colors = ['b', 'orange', 'g', 'r', 'c', 'm', 'y', 'k', 'Brown', 'ForestGreen']
-
-# Define three cluster centers
-centers = [[4, 2],
-           [1, 7],
-           [5, 6]]
-
-# Define three cluster sigmas in x and y, respectively
-sigmas = [[0.8, 0.3],
-          [0.3, 0.5],
-          [1.1, 0.7]]
 
 # Insert his test data instead !!!!
 # Then our data 

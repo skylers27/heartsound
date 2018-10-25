@@ -1,3 +1,6 @@
+#testFun.py
+#Skyler Szot
+#Alisa Levin
 #clustering testFun.dat
 #kmeans clustering, graphing, elbow method, and silhouette plot
 
@@ -13,7 +16,6 @@ X = np.zeros(shape=(200,2))
 for i in range(0,len(y)):
 	for j in range(0,len(y[0])):
 		X[i,j] = float(y[i,j])
-		print(str(i) + ' ' + str(j))
 
 # # Grouping objects by similarity using k-means
 
@@ -25,17 +27,13 @@ import matplotlib.pyplot as plt
 plt.scatter(X[:, 0], X[:, 1], 
             c='white', marker='o', edgecolor='black', s=50)
 
-plt.xlabel('Duration')
-plt.ylabel('Pitch')
+plt.xlabel('X')
+plt.ylabel('Y')
 
 plt.grid()
 plt.tight_layout()
 #plt.savefig('images/11_01.png', dpi=300)
 plt.show()
-
-
-# In[5]:
-
 
 from sklearn.cluster import KMeans
 
@@ -63,11 +61,6 @@ plt.scatter(X[y_km == 1, 0],
             s=50, c='orange',
             marker='o', edgecolor='black',
             label='cluster 2')
-plt.scatter(X[y_km == 2, 0],
-            X[y_km == 2, 1],
-            s=50, c='lightblue',
-            marker='v', edgecolor='black',
-            label='cluster 3')
 plt.scatter(km.cluster_centers_[:, 0],
             km.cluster_centers_[:, 1],
             s=250, marker='*',
@@ -75,33 +68,15 @@ plt.scatter(km.cluster_centers_[:, 0],
             label='centroids')
 plt.legend(scatterpoints=1)
 
-plt.xlabel('Duration')
-plt.ylabel('Pitch')
+plt.xlabel('X')
+plt.ylabel('Y')
 
 plt.grid()
 plt.tight_layout()
 #plt.savefig('images/11_02.png', dpi=300)
 plt.show()
 
-
-
-# ## A smarter way of placing the initial cluster centroids using k-means++
-
-# ...
-
-# ## Hard versus soft clustering
-
-# ...
-
-# ## Using the elbow method to find the optimal number of clusters 
-
-# In[7]:
-
-
 print('Distortion: %.2f' % km.inertia_)
-
-
-# In[8]:
 
 # plot elbow method to show ideal number of clusters 
 distortions = []
@@ -120,18 +95,13 @@ plt.tight_layout()
 #plt.savefig('images/11_03.png', dpi=300)
 plt.show()
 
-
-
 # ## Quantifying the quality of clustering  via silhouette plots
-
-# In[9]:
-
 
 import numpy as np
 from matplotlib import cm
 from sklearn.metrics import silhouette_samples
 
-km = KMeans(n_clusters=10, 
+km = KMeans(n_clusters=2, 
             init='k-means++', 
             n_init=10, 
             max_iter=300,
@@ -165,12 +135,3 @@ plt.xlabel('Silhouette coefficient')
 plt.tight_layout()
 #plt.savefig('images/11_04.png', dpi=300)
 plt.show()
-
-
-
-
-
-
-
-
-
